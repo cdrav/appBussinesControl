@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" href="./images/favicon.jpeg" type="image/x-icon">
+</head>
+<body>
+      <!-- Header -->
+      <header class="bg-dark text-white text-center p-3">
+        <h1>Aplicación Business Control</h1>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="./index.html">Inicio</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Inventarios.html">Inventarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./ventas.html">Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./informes.html">Informes</a>
+                    </li>
+                
+                   <li class="nav-item">
+                    <a class="nav-link" href="./clientes.html">Clientes</a>
+                  </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+
+</div>
+
+<!-- Gestión de Inventarios -->
+<div id="inventarios" class="container mt-5">
+    <h2>Gestión de Inventarios</h2>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Nombre del Producto</th>
+                <th>Cantidad</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Producto 1</td>
+                <td>50</td>
+                <td>$10.00</td>
+                <td>
+                    <button class="btn btn-warning btn-sm">Editar</button>
+                    <button class="btn btn-danger btn-sm">Eliminar</button>
+                </td>
+            </tr>
+            <!-- Agregar más filas según sea necesario -->
+        </tbody>
+    </table>
+    <button class="btn btn-success">Añadir Producto</button>
+</div>
+ <!-- Footer -->
+ <footer class="bg-dark text-white text-center p-3 mt-5">
+    <p>create by: Cristian Ruiz.</p>
+</footer>
+
+<!-- Scripts de Bootstrap -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="./productRoutes.js"></script>
+</body>
+</html>

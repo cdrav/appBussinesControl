@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informes de Ventas</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" href="./images/favicon.jpeg" type="image/x-icon">
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+      <!-- Header -->
+      <header class="bg-dark text-white text-center p-3">
+        <h1>Aplicación Business Control</h1>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="./index.html">Inicio</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./Inventarios.html">Inventarios</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./ventas.html">Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="./informes.html">Informes</a>
+                    </li>
+                
+                   <li class="nav-item">
+                    <a class="nav-link" href="./clientes.html">Clientes</a>
+                  </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Informes Page -->
+    <div class="container mt-5">
+        <div class="jumbotron text-center">
+            <h1 class="display-4">Informes de Ventas</h1>
+            <p class="lead">Aquí puede ver un resumen de todas las ventas realizadas.</p>
+        </div>
+
+        <!-- Tabla de Ventas -->
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID Venta</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Cliente</th>
+                    <th>Vendedor</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Filas de ejemplo; estos datos deberían ser dinámicos -->
+                <tr>
+                    <td>1</td>
+                    <td>2024-01-01</td>
+                    <td>$100.00</td>
+                    <td>Juan Pérez</td>
+                    <td>María García</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>2024-01-02</td>
+                    <td>$150.00</td>
+                    <td>Ana López</td>
+                    <td>Carlos Ruiz</td>
+                </tr>
+                <!-- Añade más filas según sea necesario -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center p-3 mt-5">
+        <p>create by: Cristian Ruiz.</p>
+    </footer>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
