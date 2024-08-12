@@ -84,38 +84,41 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <!-- Script para manejar el inicio de sesión -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('loginForm').addEventListener('submit', async (event) => {
-                event.preventDefault();
-        
-                const email = document.getElementById('email').value;
-                const password = document.getElementById('password').value;
-        
-                try {
-                    const response = await fetch('http://localhost:3001/api/login', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ email, password })
-                    });
-        
-                    if (!response.ok) {
-                        const errorData = await response.json();
-                        alert(errorData.error || 'Error al iniciar sesión');
-                        return;
-                    }
-        
-                    const data = await response.json();
-                    localStorage.setItem('token', data.token);
-                    window.location.href = './index.html';
-                } catch (error) {
-                    console.error('Error:', error);
-                    alert('Error al iniciar sesión');
+<!-- Script para manejar el inicio de sesión -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+    
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+    
+            try {
+                const response = await fetch('http://localhost:3001/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password })
+                });
+    
+                if (!response.ok) {
+                    const errorData = await response.json(); // Leer la respuesta como JSON
+                    alert(errorData.error || 'Error al iniciar sesión');
+                    return;
                 }
-            });
+    
+                const data = await response.json(); // Leer la respuesta como JSON
+                localStorage.setItem('token', data.token);
+                window.location.href = './index.html';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al iniciar sesión');
+            }
         });
-    </script>
+    });
+</script>
+
+
 </body>
 </html>

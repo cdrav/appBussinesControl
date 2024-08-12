@@ -3,13 +3,13 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const nombre = document.getElementById('nombre').value;
-        const email = document.getElementById('email').value;
-        const contraseña = document.getElementById('contraseña').value;
-        const rol = document.getElementById('rol').value;
+        const nombre = document.getElementById('nombre').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const rol = document.getElementById('rol').value.trim();
 
         // Validar campos
-        if (!nombre || !email || !contraseña || !rol) {
+        if (!nombre || !email || !password || !rol) {
             alert('Todos los campos son necesarios');
             return;
         }
@@ -20,12 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ nombre, email, contraseña, rol })
+                body: JSON.stringify({ nombre, email, password, rol })
             });
 
             if (!response.ok) {
                 const error = await response.json();
-                alert('Error al registrar usuario: ' + (error.error || 'Ocurrió un error'));
+                alert('Error al registrar usuario: ' + (error.message || 'Ocurrió un error'));
                 return;
             }
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!response.ok) {
                 const error = await response.json();
-                alert('Error al obtener usuarios: ' + (error.error || 'Ocurrió un error'));
+                alert('Error al obtener usuarios: ' + (error.message || 'Ocurrió un error'));
                 return;
             }
 

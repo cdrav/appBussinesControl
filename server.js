@@ -1,135 +1,93 @@
 const express = require('express');
-const cors = require('cors');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const bcrypt = require('bcrypt');
+const cors = require('cors');
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 3001;
+const port = 3001;
 
-// Configuración CORS y bodyParser
-app.use(cors());
+// Configuración de CORS
+app.use(cors({
+    origin: 'http://127.0.0.1:5501', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+}));
+
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Ruta para la raíz del servidor
-app.get('/', (req, res) => {
-  res.send('Servidor funcionando correctamente');
+// Configuración de la base de datos
+const db = mysql.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: 'Magodeoz891108',
+    database: 'ventas_inventarios'
 });
 
-// Conectar a la base de datos
-const connection = mysql.createConnection({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME
-});
-
-connection.connect(err => {
-  if (err) {
-    console.error('Error conectando a la base de datos:', err);
-    return;
-  }
-  console.log('Conectado a la base de datos MySQL');
-});
-
-// Ruta POST para crear un usuario
-app.post('/api/usuarios', (req, res) => {
-  const { nombre, email, contraseña, rol } = req.body;
-
-  // Validar los datos
-  if (!nombre || !email || !contraseña || !rol) {
-    return res.status(400).json({ error: 'Todos los campos son necesarios' });
-  }
-
-  // Encriptar contraseña
-  bcrypt.hash(contraseña, 10, (err, hashedPassword) => {
+// Conexión a la base de datos
+db.connect(err => {
     if (err) {
-      console.error('Error al encriptar la contraseña:', err);
-      return res.status(500).json({ error: 'Error al encriptar la contraseña' });
+        console.error('Error al conectar a la base de datos:', err);
+        process.exit(1); // Salir si la conexión falla
     }
-
-    const query = 'INSERT INTO Usuarios (nombre, email, contraseña, rol) VALUES (?, ?, ?, ?)';
-    connection.query(query, [nombre, email, hashedPassword, rol], (err, results) => {
-      if (err) {
-        console.error('Error al crear el usuario:', err);
-        return res.status(500).json({ error: 'Error al crear el usuario' });
-      }
-      res.status(201).json({ id_usuario: results.insertId, nombre, email, rol });
-    });
-  });
+    console.log('Conectado a la base de datos MySQL');
 });
 
-// Ruta POST para iniciar sesión
+// Ruta para manejar el login
 app.post('/api/login', (req, res) => {
-  console.log('Cuerpo de la solicitud:', req.body); // Log para depuración
-  const { email, contraseña } = req.body;
+    const { email, password } = req.body;
 
-  if (!email || !contraseña) {
-    return res.status(400).json({ error: 'Email y contraseña son necesarios' });
-  }
-
-  const query = 'SELECT * FROM Usuarios WHERE email = ?';
-  connection.query(query, [email], (err, results) => {
-    if (err) {
-      console.error('Error al buscar el usuario:', err);
-      return res.status(500).json({ error: 'Error al buscar el usuario' });
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Faltan el email o la contraseña' });
     }
 
-    if (results.length === 0) {
-      return res.status(401).json({ error: 'Email o contraseña incorrectos' });
-    }
+    const query = 'SELECT * FROM Usuarios WHERE email = ?';
+    
+    db.query(query, [email], (err, results) => {
+        if (err) {
+            console.error('Error en la consulta:', err);
+            return res.status(500).json({ error: 'Error en el servidor' });
+        }
 
-    const user = results[0];
+        if (results.length > 0) {
+            const user = results[0];
 
-    // Comparar contraseñas
-    bcrypt.compare(contraseña, user.contraseña, (err, isMatch) => {
-      if (err) {
-        console.error('Error al comparar contraseñas:', err);
-        return res.status(500).json({ error: 'Error al procesar la solicitud' });
-      }
+            // Comparar la contraseña ingresada con la cifrada en la base de datos
+            bcrypt.compare(password, user.password, (err, isMatch) => {
+                if (err) {
+                    console.error('Error al comparar contraseñas:', err);
+                    return res.status(500).json({ error: 'Error en el servidor' });
+                }
 
-      if (!isMatch) {
-        return res.status(401).json({ error: 'Email o contraseña incorrectos' });
-      }
-
-      // Generar token JWT
-      const token = jwt.sign(
-        { id_usuario: user.id_usuario, email: user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: '1h' }
-      );
-
-      res.status(200).json({ token });
+                if (isMatch) {
+                    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET || 'tu_clave_secreta', { expiresIn: '1h' });
+                    return res.json({ token });
+                } else {
+                    return res.status(401).json({ error: 'Email o contraseña incorrectos' });
+                }
+            });
+        } else {
+            return res.status(401).json({ error: 'Email o contraseña incorrectos' });
+        }
     });
-  });
 });
 
-// Middleware para proteger rutas
-const authenticateToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
+// Servir archivos estáticos
+app.use(express.static('public'));
 
-  if (token == null) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
-
-// Ejemplo de ruta protegida
-app.get('/api/protected', authenticateToken, (req, res) => {
-  res.json({ message: 'Acceso autorizado', user: req.user });
+// Manejo de errores 404
+app.use((req, res) => {
+    res.status(404).json({ error: 'Ruta no encontrada' });
 });
 
-// Inicia el servidor
+// Manejo de errores generales
+app.use((err, req, res, next) => {
+    console.error('Error general:', err);
+    res.status(500).json({ error: 'Error interno del servidor' });
+});
+
 app.listen(port, () => {
-  console.log(`Servidor corriendo en el puerto ${port}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
-
-// Rutas de productos
-const productRoutes = require('./routes/productRoutes');
-app.use('/api/products', authenticateToken, productRoutes);
